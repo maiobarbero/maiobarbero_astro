@@ -12,8 +12,6 @@ import devSvg from '../../public/Developer activity-amico.svg'
 import contactSvg from '../../public/Online world-pana.svg'
 import cv from '../../public/Matteo_Barbero_-_Web_Developer.pdf'
 
-console.log(devSvg)
-
 const articles = await Astro.glob('../content/Blog/*.md*')
 const sortedArt = articles.sort(
 	(a, b) =>
@@ -104,7 +102,7 @@ const sortedArt = articles.sort(
 				data-aos='fade-left'
 			>
 				<Image
-					src={devSvg.src}
+					src={devSvg}
 					alt='About me illustration'
 					aspectRatio='1:1'
 					width={900}
@@ -150,7 +148,7 @@ const sortedArt = articles.sort(
 			<div class='mb-12 w-full shrink-0 grow-0 basis-auto lg:mb-0 lg:w-5/12'>
 				<div class='flex lg:py-12 aos-init aos-animate' data-aos='fade-right'>
 					<Image
-						src={contactSvg.src}
+						src={contactSvg}
 						alt='Contact illustration'
 						class='w-full rounded-lg shadow-3xl lg:ml-[50px] z-[10]'
 						width={800}
