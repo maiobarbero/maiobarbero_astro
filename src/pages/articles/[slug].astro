@@ -1,0 +1,103 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import { slugify } from '../../helpers/slugify'
+import BaseText from '@components/atoms/articles/BaseText.astro'
+import List from '@components/atoms/articles/List.astro'
+import Code from '@components/atoms/articles/Code.astro'
+import Heading1 from '@components/atoms/articles/Heading1.astro'
+import Heading2 from '@components/atoms/articles/Heading2.astro'
+import Heading3 from '@components/atoms/articles/Heading3.astro'
+import Heading4 from '@components/atoms/articles/Heading4.astro'
+import Heading5 from '@components/atoms/articles/Heading5.astro'
+import Heading6 from '@components/atoms/articles/Heading6.astro'
+
+export async function getStaticPaths() {
+	const posts = await Astro.glob('../../content/Blog/*.md*')
+
+	return posts.map(post => ({
+		params: {
+			slug: slugify(post.frontmatter.title),
+		},
+		props: { post },
+	}))
+}
+
+const { frontmatter, Content } = Astro.props.post
+const {
+	title,
+	date,
+	tags,
+	description,
+	subtitle,
+	seoTitle,
+	keywords,
+	imagePath,
+} = frontmatter
+---
+
+<BaseLayout
+	title={seoTitle ?? title}
+	keywords={keywords ?? tags}
+	description={description}
+	type='post'
+	date={new Date(date).toLocaleDateString('en-us', { dateStyle: 'full' })}
+>
+	<div class='p-2 container' id='article'>
+		<h1 class='text-4xl lg:text-6xl 3xl:text-8xl font-black'>{title}</h1>
+		<h2 class='text-3xl lg:text-4xl 3xl:text-6xl font-thin'>{subtitle}</h2>
+		<div class='mt-4 font-thin'>
+			{new Date(date).toLocaleDateString('en-us', { dateStyle: 'full' })}
+		</div>
+
+		<div
+			class='w-full max-w-3xl bg-gray-400 dark:bg-slate-700 text-primary-content mt-12 rounded-xl p-4 text-lg'
+		>
+			<div class='flex justify-between flex-col md:flex-row gap-8'>
+				<div class='flex flex-col'>
+					<p class='text-2xl font-bold'>Tags:</p>
+					<div class='flex gap-4 mt-4'>
+						{
+							tags.map(tag => {
+								return (
+									<div class='px-2 py-2 font-bold text-white rounded-xl bg-pink-500  text-lg'>
+										{tag}
+									</div>
+								)
+							})
+						}
+					</div>
+				</div>
+				<div class='text-2xl font-bold'>
+					<span id='time'></span> read
+				</div>
+			</div>
+		</div>
+
+		<Content
+			components={{
+				h1: Heading1,
+				h2: Heading2,
+				h3: Heading3,
+				h4: Heading4,
+				h5: Heading5,
+				h6: Heading6,
+				p: BaseText,
+				li: List,
+				pre: Code,
+			}}
+		/>
+
+		<script>
+			const art = document.querySelector('#article') as HTMLElement
+			const ttr = () => {
+				const text = art.innerText
+				const wpm = 225
+				const words = text.trim().split(/\s+/).length
+				let time: number | string = Math.round(words / wpm)
+				time = time > 0 ? time : '<1'
+				document.getElementById('time').innerText = time.toString() + 'min'
+			}
+			ttr()
+		</script>
+	</div>
+</BaseLayout>

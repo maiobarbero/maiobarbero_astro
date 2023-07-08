@@ -1,0 +1,155 @@
+---
+title: Astro flickering dark mode
+subtitle: How to prevent from flickering
+date: 2023-07-03
+tags:
+  - Astro
+  - Tailwind
+  - Alpinejs
+description: How to solve the server/client state synchronisation.
+imagePath: ../../../public/astro-cover.png
+keywords:
+seoTitle:
+---
+
+## What is Astro
+
+To say it with Astro words: _Astro is the all-in-one web framework designed for speed_
+Astro is a JavaScript framework for multi-page applications, MPA, that combines a html/javascript syntax with frontmatter. The code between hyphens will be executed at build time, while the JavaScript code between script tags will be executed at runtime.
+
+## The problem
+
+Usually, for dark mode, you can use localStorage to set users' theme preferences. The user will switch between themes by clicking on a button with an on-click callback like this:
+
+```javascript
+if (localStorage.getItem('theme') === 'dark') {
+	localStorage.setIem('theme', 'light')
+} else {
+	localStorage.setIem('theme', 'dark')
+}
+```
+
+A side effect of MPA is that Astro requires fetching a page from the server while jumping between those with links. In the case of **dark mode**, the server doesn't know first what is set as theme, dark or light version of the website, by the client. Then, when the page is loaded and script tags are executed client-side, you will have the correct theme.
+
+This can cause a _page to flicker_, let's say that you set a dark theme on the homepage and you want to visit another page. By clicking the link you request a new page from the server, Astro pages are built from the content of the **page folder** and the name of the files make the url. So here we can have a problem **server/client state synchronisation**: pages first load whit a default theme, let's say light theme, then switch to dark when the script is executed.
+
+## The solution
+
+A possible solution is to add a blocking script before loading the content. **How can be achieved this when Astro processes and bundles all the client-side scripts?**
+To avoid bundling you can use the _is:inline_ directive. From [Astro documentation](https://docs.astro.build/en/guides/client-side-scripts/):
+
+```html
+<script is:inline>
+	// Will be rendered into the HTML exactly as written!
+	// Local imports are not resolved and will not work.
+	// If in a component, repeats each time the component is used.
+</script>
+```
+
+So you can add a blocking script before everything else in your layout component and check which theme is set by client
+
+## Dark mode with Tailwind and Alpine.js
+
+This is the code I wrote to face this problem and to solve page flickering on my Astro website.
+Part of the script was replaced with **Alpine.js** directives and I used **Tailwind** for styling.
+I will skip project initialization and dependencies installation, you can refer to [Astro doc](https://docs.astro.build/en/guides/integrations-guide/) for this.
+
+First of all, we have to customize `tailwind.config.cjs` in order to use data-theme as dark mode selector instead of a dark class.
+
+```typescript
+module.exports = {
+content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+darkMode: ['class', '[data-theme="dark"]'],
+[...]
+```
+
+Now we have to set the correct data-theme in the html tag of our layout. By using Alpine.js directives we implement a dark mode feature that persists in the user's preference in the browser's local storage.
+
+```html
+<html
+	lang="en"
+	x-data="{darkMode: localStorage.getItem('darkMode')}"
+	x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"
+	x-bind:data-theme="darkMode"
+></html>
+```
+
+Here's an explanation of each directive:
+
+- `x-data="{darkMode: localStorage.getItem('darkMode')}"`
+  This directive initializes the Alpine.js component's data object with a property called `darkMode`. The initial value of `darkMode` is retrieved from the browser's local storage using `localStorage.getItem('darkMode')`.
+- `x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"`
+  This directive adds an initialization logic to the component. It watches the `darkMode` property for changes and whenever the value changes, it updates the `localStorage` with the new value using `localStorage.setItem('darkMode', val)`. This ensures that the user's preference is saved in the local storage.
+- `x-bind:data-theme='darkMode'`
+  This directive binds the value of the `darkMode` property to the `data-theme` attribute.
+  When `darkMode` is `true`, the `data-theme` attribute will have a value of `'dark'`. When `darkMode` is `false`, the `data-theme` attribute will have a value of `'light'`.
+
+Now we need something to toggle between these two themes. We can create a floating button using Tailwind. Create a new component named DarkModeToggle.astro
+
+```html
+---
+---
+
+<div
+	id="darkToggle"
+	class="fixed bottom-10 right-10 dark:bg-gray-200 bg-slate-900 rounded-full h-12 w-12 cursor-pointer flex items-center justify-center z-50 hover:scale-125 transition-all duration-500"
+	x-on:click="darkMode = (darkMode == 'dark') ? 'light' : 'dark'"
+>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		fill="none"
+		viewBox="0 0 24 24"
+		stroke-width="1.5"
+		stroke="#0f172a"
+		class="w-8 h-8 stroke-1"
+		x-show.transition="darkMode === 'dark'"
+	>
+		<path
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+		></path>
+	</svg>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		fill="none"
+		viewBox="0 0 24 24"
+		stroke-width="1.5"
+		stroke="#e5e7eb"
+		class="w-8 h-8 stroke-1"
+		x-show.transition="darkMode !== 'dark'"
+	>
+		<path
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+		></path>
+	</svg>
+</div>
+```
+
+With this piece of code, we create a button that set a darkMode value in local storage using the `x-on:click` directive that toggles the two values. Based on the darkMode value we show a different icon. This I achieved with the `x-show` directive.
+Now we have a layout that can switch between a dark theme and a light theme, but we are facing a **server/client state synchronisation** problem.
+
+Here comes our blocking script. Before everything in our layout we have to add a script with `is:inline` directive to avoid bundling.
+
+```html
+<script is:inline>
+	if (localStorage.getItem('darkMode') === 'dark') {
+		document.querySelector('html').dataset.theme = 'dark'
+	}
+	if (localStorage.getItem('darkMode') === 'light') {
+		document.querySelector('html').dataset.theme = 'light'
+	}
+	if (!localStorage.getItem('darkMode')) {
+		let theme = window.matchMedia('(prefers-color-scheme: dark)')
+			? 'dark'
+			: 'light'
+		localStorage.setItem('darkMode', theme)
+	}
+</script>
+```
+
+1. The first `if` statement checks if the value of `'darkMode'` in the local storage is `'dark'`. If true, it sets the `data-theme` attribute of the `<html>` element to `'dark'`. This applies the dark theme to the webpage.
+2. The second `if` statement checks if the value of `'darkMode'` in the local storage is `'light'`. If true, it sets the `data-theme` attribute of the `<html>` element to `'light'`. This applies the light theme to the webpage.
+3. The third `if` statement is executed when there is no value stored for `'darkMode'` in the local storage. It checks the user's preferred color scheme using `window.matchMedia('(prefers-color-scheme: dark)').matches`. If the user prefers a dark color scheme, it sets `theme` to `'dark'`. Otherwise, it sets `theme` to `'light'`. Then, it stores this value in the local storage using `localStorage.setItem('darkMode', theme)`. This ensures that the user's preferred theme is saved in the local storage for future visits.

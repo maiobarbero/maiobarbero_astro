@@ -1,0 +1,50 @@
+---
+import { slugify } from '../../helpers/slugify'
+
+import BaseLayout from '@layouts/BaseLayout.astro'
+import Card from '@components/Card.astro'
+import Pagination from '@components/atoms/Pagination.astro'
+
+export async function getStaticPaths({ paginate }) {
+	const articles = await Astro.glob('../../content/Blog/*.md*')
+	const sortedArt = articles.sort(
+		(a, b) =>
+			new Date(b.frontmatter.date).getTime() -
+			new Date(a.frontmatter.date).getTime()
+	)
+	return paginate(sortedArt, { pageSize: 6 })
+}
+
+const { page } = Astro.props
+---
+
+<BaseLayout
+	title='Articles'
+	canonical='/articles'
+	description='All my articles'
+>
+	<h2 class='text-7xl font-extrabold outline-text mb-12 text-center'>
+		All Articles
+	</h2>
+	<div
+		class=`max-w-7xl w-full grid md:grid-cols-2 lg:grid-cols-${(page.data.length <=3) ? page.data.length :'3'}
+		gap-4
+		m-auto`
+	>
+		{
+			page.data.map((art, index) => {
+				return (
+					<Card
+						delay={100 * index}
+						title={art.frontmatter.title}
+						description={art.frontmatter.description}
+						date={art.frontmatter.date}
+						link={`articles/${slugify(art.frontmatter.title)}`}
+						imagePath={art.frontmatter.imagePath}
+					/>
+				)
+			})
+		}
+	</div>
+	<Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
+</BaseLayout>

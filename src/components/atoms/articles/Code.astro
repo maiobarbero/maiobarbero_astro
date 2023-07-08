@@ -1,0 +1,37 @@
+<div
+	class='mt-6 mb-24 text-lg border-2 border-slate-900 rounded-xl dark:border-gray-200 overflow-hidden'
+>
+	<div class='flex items-center justify-between px-3 py-1 h-12 bg-slate-700'>
+		<div class='flex items-center gap-2'>
+			<span class='h-4 w-4 rounded-full bg-green-500'></span>
+			<span class='h-4 w-4 rounded-full bg-yellow-500'></span>
+			<span class='h-4 w-4 rounded-full bg-red-500'></span>
+		</div>
+		<div
+			class='px-2 py-2 font-bold text-white rounded-xl bg-cyan-500 hover:bg-cyan-600 text-sm cursor-pointer'
+			id='copycode'
+		>
+			Copy code
+		</div>
+	</div>
+	<div class='px-3 lg:px-5 py-6 rounded-b-xl bg-slate-900' id='codeContainer'>
+		<slot />
+	</div>
+</div>
+
+<script>
+	const copyCode = document.querySelector('#copycode') as HTMLElement,
+		codeBlock = document.querySelector('#codeContainer').querySelector('code')
+
+	copyCode.addEventListener('click', async () => {
+		try {
+			await navigator.clipboard.writeText(codeBlock.innerText)
+			copyCode.innerText = 'Copyed'
+			setTimeout(() => {
+				copyCode.innerText = 'Copy Code'
+			}, 700)
+		} catch (err) {
+			console.error('Failed to copy: ', err)
+		}
+	})
+</script>

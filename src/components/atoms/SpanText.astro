@@ -1,0 +1,15 @@
+---
+interface Props {
+	text?: boolean
+}
+const { text = false } = Astro.props
+---
+
+<span
+	class:list={[
+		'border-t-[1px] border-emerald-600',
+		{ 'text-emerald-600 ': text },
+	]}
+>
+	<slot />
+</span>

@@ -1,0 +1,18 @@
+---
+interface Porps {
+	primary?: boolean
+}
+const { primary = true } = Astro.props
+---
+
+<button
+	class:list={[
+		'px-6 py-2 font-bold text-white rounded-xl',
+		{
+			'bg-pink-500 hover:bg-pink-600': primary,
+			'bg-cyan-500 hover:bg-cyan-600': !primary,
+		},
+	]}
+>
+	<slot />
+</button>

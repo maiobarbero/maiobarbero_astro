@@ -1,0 +1,22 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import Button from '@components/atoms/Button.astro'
+---
+
+<BaseLayout title='404'>
+	<div
+		class='lg:px-24 md:px-44 px-4 items-center flex justify-center flex-col-reverse lg:flex-row md:gap-28 gap-16'
+	>
+		<div class='w-full xl:w-1/2 relative pb-12 lg:pb-0'>
+			<div class=''>
+				<h1 class='my-2 font-bold text-5xl'>
+					Looks like you've found the doorway to the great nothing
+				</h1>
+				<p class='my-2 text-lg'>Sorry about that!</p>
+				<a href='/' class='mt-12 block'>
+					<Button primary={true}>Take me home</Button>
+				</a>
+			</div>
+		</div>
+	</div>
+</BaseLayout>

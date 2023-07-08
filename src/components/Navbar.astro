@@ -1,0 +1,86 @@
+---
+import { Picture } from '@astrojs/image/components'
+import NavLinks from '@components/atoms/NavLinks.astro'
+
+import avatar from '../../public/maiobarbero-icon.png'
+---
+
+<nav
+	class='relative mb-24 flex justify-between items-center pt-6 py-6 font-medium'
+	aria-role='navigation'
+	aria-label='Main'
+>
+	<!-- line -->
+	<svg
+		class='absolute bottom-0 left-1/2 -translate-x-1/2 z-50 width='
+		250'
+		height='4'
+		viewBox='0 0 250 4'
+		fill='none'
+		xmlns='http://www.w3.org/2000/svg'
+	>
+		<path d='M2 2L428 2' class='stroke-slate-500'></path>
+	</svg>
+
+	<!-- avatar -->
+	<div class='h-10 w-10 md:h-12 md:w-12 z-50'>
+		<a href='/'>
+			<Picture
+				src={avatar}
+				alt="Profile picture of Matteo 'Maio' Barbero"
+				aspectRatio='1:1'
+				widths={[270]}
+			/>
+		</a>
+	</div>
+
+	<!-- title -->
+	<span class='text-xl z-50'>
+		<a href='/'>maiobarbero</a>
+	</span>
+
+	<!-- burger -->
+	<div
+		class='space-y-1 cursor-pointer z-50'
+		id='burger'
+		x-on:click='burgerOpen = ! burgerOpen'
+		:class='burgerOpen ? "closed-burger" : ""'
+	>
+		<span
+			class='block h-0.5 w-8 bg-slate-800 dark:bg-slate-100 transition-all duration-500 pointer-events-none'
+			id='line-1'></span>
+		<span
+			class='block h-0.5 w-6 bg-slate-800 dark:bg-slate-100 transition-all duration-500 pointer-events-none'
+			id='line-2'></span>
+		<span
+			class='block h-0.5 w-4 bg-slate-800 dark:bg-slate-100 transition-all duration-500 pointer-events-none'
+			id='line-3'></span>
+	</div>
+
+	<!-- links -->
+	<div
+		class='fixed left-0 top-0 z-40 flex w-full flex-col items-center justify-center gap-24 text-2xl font-bold h-screen bg-gray-200 dark:bg-slate-900 transition-all duration-300'
+		id='links-container'
+		x-show='burgerOpen'
+		x-transition.duration.500ms
+		x-cloak
+	>
+		<NavLinks className=' flex flex-col gap-24 text-lg' />
+	</div>
+</nav>
+
+<style>
+	.closed-burger #line-1 {
+		transform: rotate(45deg) translateY(8px);
+	}
+	.closed-burger #line-3 {
+		transform: rotate(-45deg) translateY(-8px);
+		width: 32px;
+	}
+	.closed-burger #line-2 {
+		width: 0;
+	}
+	[x-cloak] {
+		display: none !important;
+	}
+</style>

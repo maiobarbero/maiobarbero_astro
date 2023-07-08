@@ -1,0 +1,50 @@
+---
+import { Picture } from '@astrojs/image/components'
+interface Props {
+	delay?: number
+	title: string
+	description: string
+	imagePath: string
+	date: string
+	link: string
+}
+const { delay = 0, title, description, date, link, imagePath } = Astro.props
+---
+
+<div class='flex w-full' data-aos='zoom-in-up' data-aos-delay={delay}>
+	<a
+		href={link}
+		class='rounded-xl shadow-xl mb-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all w-ful flex flex-col justify-between w-full'
+	>
+		<div class='rounded-xl mb-2'>
+			<Picture
+				alt={title}
+				src={imagePath}
+				formats={['avif', 'webp', 'jpeg']}
+				sizes='(max-width: 800px) 100vw, 800px'
+				widths={[300, 600, 900]}
+				aspectRatio='4:3'
+				position='center'
+				fit='cover'
+				class='rounded-xl object-cover object-center h-48 overflow-hidden w-full'
+			/>
+		</div>
+		<div class='pb-8 px-6'>
+			<h3 class='mb-2 text-2xl font-bold text-ellipsis'>
+				{title}
+			</h3>
+			<p class='mb-6 text-base'>
+				{description}
+			</p>
+		</div>
+		<div
+			class='border-t-2 border-emerald-400 px-6 py-3 dark:border-emerald-200 font-extralight text-sm'
+		>
+			<time
+				>{
+					new Date(date).toLocaleDateString('en-US', { dateStyle: 'long' })
+				}</time
+			>
+		</div>
+	</a>
+</div>

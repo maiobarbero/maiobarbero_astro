@@ -1,0 +1,30 @@
+---
+const { prevUrl, nextUrl } = Astro.props
+---
+
+<nav
+	aria-role='navigation'
+	aria-label='Articles'
+	class='text-center flex justify-around'
+>
+	{
+		prevUrl && (
+			<a
+				href={prevUrl}
+				class='text-lg font-bold p-2 rounded-xl border-2 border-slate-700 dark:border-gray-300'
+			>
+				Previous
+			</a>
+		)
+	}
+	{
+		nextUrl && (
+			<a
+				href={nextUrl}
+				class='text-lg font-bold p-2 rounded-xl border-2 border-slate-700 dark:border-gray-300'
+			>
+				Next
+			</a>
+		)
+	}
+</nav>
