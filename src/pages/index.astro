@@ -10,6 +10,9 @@ import Button from '@components/atoms/Button.astro'
 
 import devSvg from '../../public/Developer activity-amico.svg'
 import contactSvg from '../../public/Online world-pana.svg'
+import cv from '../../public/Matteo_Barbero_-_Web_Developer.pdf'
+
+console.log(devSvg)
 
 const articles = await Astro.glob('../content/Blog/*.md*')
 const sortedArt = articles.sort(
@@ -22,6 +25,8 @@ const sortedArt = articles.sort(
 <BaseLayout
 	title='Matteo Maio Barbero'
 	description='I am a full-stack web developer with a passion for PHP and JavaScript. I have extensive experience in website creation and implementing e-commerce solutions, such as Magento.'
+	keywords='fullstack developer, magento developer, php developer, magento developer torino, magento italia, magento torino, php developer italia, php developer torino, magentod eveloper groningen, magento groningen'
+	image={devSvg}
 >
 	<!-- Hero -->
 
@@ -38,7 +43,11 @@ const sortedArt = articles.sort(
 					I'm a<SpanText text={true}>Web</SpanText> Developer that loves both frontend
 					and backend
 				</h2>
-				<a href='#about' class='flex items-center justify-center mt-20'>
+				<a
+					href='#about'
+					class='flex items-center justify-center mt-20'
+					aria-label='Scroll to About section'
+				>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
 						fill='none'
@@ -84,10 +93,7 @@ const sortedArt = articles.sort(
 						<a href='/#contact'>
 							<Button>Contact</Button>
 						</a>
-						<a
-							href='../../public/Matteo_Barbero_-_Web_Developer.pdf'
-							target='_blank'
-						>
+						<a href={cv} target='_blank'>
 							<Button primary={false}>Download my CV</Button>
 						</a>
 					</div>
@@ -97,7 +103,12 @@ const sortedArt = articles.sort(
 				class='w-full lg:w-1/3 flex justify-center md:justify-end aos-init aos-animate'
 				data-aos='fade-left'
 			>
-				<Image src={devSvg} alt='About me illustration' aspectRatio='4:3' />
+				<Image
+					src={devSvg.src}
+					alt='About me illustration'
+					aspectRatio='1:1'
+					width={900}
+				/>
 			</div>
 		</div>
 	</MainSection>
@@ -139,9 +150,12 @@ const sortedArt = articles.sort(
 			<div class='mb-12 w-full shrink-0 grow-0 basis-auto lg:mb-0 lg:w-5/12'>
 				<div class='flex lg:py-12 aos-init aos-animate' data-aos='fade-right'>
 					<Image
-						src={contactSvg}
+						src={contactSvg.src}
 						alt='Contact illustration'
 						class='w-full rounded-lg shadow-3xl lg:ml-[50px] z-[10]'
+						width={800}
+						aspectRatio='16:9'
+						fit='cover'
 					/>
 				</div>
 			</div>

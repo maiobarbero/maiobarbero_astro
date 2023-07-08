@@ -1,6 +1,7 @@
 ---
 import { Image } from '@astrojs/image/components'
 import SpanText from './atoms/SpanText.astro'
+import cv from '../../public/Matteo_Barbero_-_Web_Developer.pdf'
 ---
 
 <footer class='lg:text-left py-6'>
@@ -16,6 +17,7 @@ import SpanText from './atoms/SpanText.astro'
 				href='https://www.instagram.com/maiobarbero.dev/'
 				target='_blank'
 				class='mr-6 text-emerald-600 dark:text-emerald-200'
+				aria-label='Instagram profile link'
 			>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
@@ -32,6 +34,7 @@ import SpanText from './atoms/SpanText.astro'
 				href='https://profiles.wordpress.org/maiobarbero/'
 				target='_blank'
 				class='mr-6 text-emerald-600 dark:text-emerald-200 hover:text-emerald-100'
+				aria-label='WordPress profile link'
 			>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
@@ -48,6 +51,7 @@ import SpanText from './atoms/SpanText.astro'
 				href='https://www.linkedin.com/in/matteo-barbero-b04647155/'
 				target='_blank'
 				class='mr-6 text-emerald-600 dark:text-emerald-200 hover:text-emerald-100'
+				aria-label='Linkedin profile link'
 			>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
@@ -64,6 +68,7 @@ import SpanText from './atoms/SpanText.astro'
 				href='https://dev.to/maiobarbero'
 				target='_blank'
 				class='mr-6 text-emerald-600 dark:text-emerald-200 hover:text-emerald-100'
+				aria-label='Dev.to profile link'
 			>
 				<svg
 					role='img'
@@ -80,6 +85,7 @@ import SpanText from './atoms/SpanText.astro'
 				href='https://github.com/maiobarbero'
 				target='_blank'
 				class='text-emerald-600 dark:text-emerald-200 hover:text-emerald-100'
+				aria-label='Github profile link'
 			>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
@@ -130,7 +136,7 @@ import SpanText from './atoms/SpanText.astro'
 					>
 				</p>
 				<p>
-					<a href='#!' class='text-neutral-600 dark:text-neutral-200'
+					<a href={cv} class='text-neutral-600 dark:text-neutral-200'
 						>Download my cv</a
 					>
 				</p>
