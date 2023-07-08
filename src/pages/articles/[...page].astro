@@ -39,7 +39,7 @@ const { page } = Astro.props
 						title={art.frontmatter.title}
 						description={art.frontmatter.description}
 						date={art.frontmatter.date}
-						link={`/${slugify(art.frontmatter.title)}`}
+						link={`${slugify(art.frontmatter.title)}`}
 						imagePath={art.frontmatter.imagePath}
 					/>
 				)
