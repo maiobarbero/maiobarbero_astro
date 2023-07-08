@@ -11,7 +11,7 @@ import image from '@astrojs/image'
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://maiobarbero.github.io',
-	bae: '/nomerepo',
+	base: '/maiobarbero_astro',
 	integrations: [
 		tailwind(),
 		alpinejs(),
