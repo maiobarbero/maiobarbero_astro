@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://maiobarbero.dev/sitemap-index.xml
+Sitemap: https://maiobarbero.dev/sitemap-0.xml
