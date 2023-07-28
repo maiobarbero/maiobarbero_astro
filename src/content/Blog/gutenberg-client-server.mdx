@@ -1,0 +1,124 @@
+---
+title: Custom Gutenberg block 
+subtitle: client side vs server side creation
+date: 2023-07-28
+tags:
+  - React
+  - WordPress
+  - PHP
+description: Which are the differences between a custom these two rendering method inside the WordPress Gutenberg editor?
+imagePath: ../../../public/gutenberg.png
+keywords:
+seoTitle:
+---
+
+There's a lot of talk these days about client-side rendering vs server-side rendering, and also in a **Gutenberg Custom Block**, we can face this dilemma.
+Gutenberg editor is designed to work primarily on the client side, using React for its components. However, it's possible to make a distinction between client-side and server-side components in the context of  custom Gutenberg blocks
+Typically these blocks are made using the `registerBlockType`, both in a PHP and JavaScript file. The JavaScript function accepts, in addition to name, category, title and other arguments, two functions: `edit` and `save`. These two functions provide the interface for how blocks are going to be rendered inside the editor, how they will operate and be manipulated, and how they will be saved.
+
+## Client-side components
+
+These components are responsible for the visual representation and user interactions that happen within the editor or on the front end of the website. These components are primarily written using JavaScript (React) and CSS.
+This approach is ideal when you want to handle user interactions and offer a dynamic editing experience. It provides immediate feedback and is especially useful when the block's content relies on the user's interaction within the editor.
+
+## Server-side components
+
+These handle the rendering of the block content when the page is loaded on the server before it's sent to the client. These components may be responsible for dynamically generating block content or processing some server-side logic before the final content is displayed.
+Server-side rendering is the way to go when you need to deal with dynamic data from the database or perform operations that can't or shouldn't be done on the client side. It's also a good fit when you want to maintain the consistency of the block output, regardless of the JavaScript capabilities of the client device.
+
+## A practical example
+
+Let's create the same block, a simple title with a *wysiwyg* paragraph.
+
+Both share the same registration and the same `edit` function. Create a `titleWithParagraphBlock.js` file, in a theme or better in a plugin, and add the code below:
+
+```js
+
+import { registerBlockType } from '@wordpress/blocks';
+import { RichText, PlainText } from '@wordpress/block-editor';
+
+registerBlockType('plugin-name/title-paragraph', {
+  title: 'Title with Paragraph',
+  icon: 'admin-post',
+  category: 'common',
+
+  edit: ({ attributes, setAttributes }) => {
+    const { title, content } = attributes;
+
+    return (
+      <div>
+        <h1>
+          <PlainText
+            value={title}
+            onChange={(newTitle) => setAttributes({ title: newTitle })}
+            placeholder="Enter title..."
+          />
+        </h1>
+        <RichText
+          value={content}
+          onChange={(newContent) => setAttributes({ content: newContent })}
+          placeholder="Enter paragraph..."
+        />
+      </div>
+    );
+  },
+[...]
+
+```
+
+### The two way of save
+
+This simple block can be easily coded inside the `save` function.
+
+```js
+save: ({ attributes }) => { 
+	const { title, content } = attributes; 
+	return ( 
+		<div> <h2>{title}</h2> <RichText.Content value={content} /> </div> 
+	); 
+},
+
+```
+
+But maybe a WordPress developer is more familiar with **PHP**. So let's figure out how to render this block with a PHP file:
+
+create titleWithParagraphBlock.php
+
+```php
+<?php
+
+function render_title_with_paragraph_block($attributes) {
+  $title = $attributes['title'];
+  $content = $attributes['content'];
+
+  return '<div><h2>' . esc_html($title) . '</h2><p>' . wp_kses_post($content) . '</p></div>';
+}
+```
+
+Now it's time to register the block in the same php file
+
+```php
+register_block_type('plugin-name/title-paragraph', array(
+  'render_callback' => 'render_title_with_paragraph_block',
+  'attributes' => array(
+    'title' => array(
+      'type' => 'string',
+      'default' => 'Default Title', // Set a default value if needed
+    ),
+    'content' => array(
+      'type' => 'string',
+      'default' => '', // Set a default value if needed
+    ),
+  ),
+));
+```
+
+## Conclusion
+
+Building custom Gutenberg blocks allows us to extend the WordPress editor to cater to our specific needs. Whether we choose to go with a client-side or server-side approach depends largely on our comfort level with JavaScript (React) versus PHP and the specific requirements of the block.
+
+Happy coding!
+
+
+*Pic by <a href="https://unsplash.com/it/@tozakfikret?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Fikret tozak</a> on <a href="https://unsplash.com/it/foto/rfNLa1HL7eY?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>*
+  
