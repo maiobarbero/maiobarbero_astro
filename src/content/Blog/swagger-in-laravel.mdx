@@ -1,0 +1,272 @@
+---
+title: Swagger in Laravel Project
+subtitle: How use Swagger to develop your API in LAravel
+date: 2023-12-04
+tags:
+  - Laravel
+  - PHP
+  - API
+description: How to use Swagger inside you Laravel project to document and develop an API.
+imagePath: ../../../public/laravel-swagger.jpg
+keywords:
+seoTitle:
+---
+
+### What is Swagger?
+Swagger is an open-source framework to facilitate API documentation and development. It provides a standardised way to describe, document, and consume RESTful web services. Swagger makes it easier for developers and clients to understand and interact with services.
+
+At its core, Swagger utilises a specification format known as OpenAPI (formerly Swagger Specification). OpenAPI is a language-agnostic description format used to define RESTful APIs. It allows developers to articulate the functionality of their APIs, including details such as available endpoints, request/response formats, authentication methods, and more.
+
+### Why should you use it?
+One of the key advantages of Swagger is its interactive documentation, based on OpenAPI specification. This documentation not only serves as a comprehensive guide for developers but also enables clients to explore and test the API directly from a user-friendly interface. It's like having a fully documented and configured Postman inside the browser!
+
+In summary, Swagger and OpenAPI work hand in hand to streamline the API development process, providing a standardized way to define, document, and consume RESTful APIs. This ensures that APIs are well-documented, easily understood, and straightforward to integrate, ultimately fostering collaboration between API providers and consumers.
+
+### How to use it with Laravel
+There are some packages to integrate Swagger inside a Laravel, the one that I suggest to you is [darkaonline/l5-swagger](https://github.com/DarkaOnLine/L5-Swagger).
+
+First of all you need to install it in your project with Composer
+`composer require "darkaonline/l5-swagger"`
+
+Then inside your .env file you need to put a variable called L5_SWAGGER_CONST_HOST, like the one below used with Sail
+`L5_SWAGGER_CONST_HOST=http://0.0.0.0/api/v1`
+
+We can now publish the configuration file for **`darkaonline/l5-swagger`**. Just run this command:
+`php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"`
+
+Now we have to set up some rules for the Swagger inside our controllers and methods and generate it.
+
+We put our first comment inside the app/Http/Controllers/Controller.php file. This comment simply describes our API. It will be the "header" text in our page *(L5_SWAGGER_CONST_HOST/api/documentation)*
+```php
+/**
+
+* @OA\Info(
+
+* version="1.0.0",
+
+* title="MyAPI Documentation",
+
+* description="Documentation for the public API",
+
+* @OA\Contact(
+
+* email="maiowebdesign@gmail.com"
+
+* ),
+
+* @OA\License(
+
+* name="Apache 2.0",
+
+* url="http://www.apache.org/licenses/LICENSE-2.0.html"
+
+* )
+
+* )
+
+*
+
+* @OA\Server(
+
+* url=L5_SWAGGER_CONST_HOST,
+
+* description="ArticCMS API Server"
+
+* )
+
+  
+
+*
+
+* @OA\Tag(
+
+* name="myAPI",
+
+* description="API Endpoints of MyAPI"
+
+* )
+
+*/
+```
+
+Now we can define our method in the seme way, adding a comment block before the methods inside the controllers. This is an example for a controller that get all the post inside a blog project. We can easy add our query parameters, like with_catgeories or with_author, and test them directly in the browser. We can also bind the param to an Enum, and define the response codes.
+
+```php
+/**
+
+* @OA\Get(
+
+* path="/posts",
+
+* operationId="getPostsList",
+
+* tags={"Posts"},
+
+* summary="Get list of posts",
+
+* description="Returns a list of posts with optional filters.",
+
+* @OA\Parameter(
+
+* name="with_categories",
+
+* in="query",
+
+* description="Include categories associated with each post",
+
+* @OA\Schema(type="boolean")
+
+* ),
+
+* @OA\Parameter(
+
+* name="with_author",
+
+* in="query",
+
+* description="Include author associated with each post",
+
+* @OA\Schema(type="boolean")
+
+* ),
+
+* @OA\Parameter(
+
+* name="sort_by_date",
+
+* in="query",
+
+* description="Sort the posts by date",
+
+* @OA\Schema(type="boolean")
+
+* ),
+
+* @OA\Parameter(
+
+* name="lang",
+
+* in="query",
+
+* description="Language of the posts",
+
+* @OA\Schema(
+
+* type="string",
+
+* enum=App\Enums\LocaleEnum::class,
+
+* example="en_GB"
+
+* )
+
+* ),
+
+* @OA\Parameter(
+
+* name="status",
+
+* in="query",
+
+* description="Status of the posts",
+
+* @OA\Schema(
+
+* type="string",
+
+* enum=App\Enums\Post\PostStatusEnum::class,
+
+* example="draft"
+
+* )
+
+* ),
+
+* @OA\Parameter(
+
+* name="paginate",
+
+* in="query",
+
+* description="Number of posts per page for pagination (default: 15)",
+
+* @OA\Schema(type="integer", default=15)
+
+* ),
+
+* @OA\Response(
+
+* response=200,
+
+* description="Successful operation",
+
+* @OA\JsonContent(
+
+* type="array",
+
+* @OA\Items(ref="#/components/schemas/Post")
+
+* )
+
+* ),
+
+* )
+
+*/
+```
+
+It's also possible to describe our models to have an in-browser documentation of our entities. The method is always the same, just add a comment before your model class. The one below is the definition of a Post model
+
+```php
+/**
+
+* @OA\Schema(
+
+* title="Post",
+
+* description="Post model",
+
+* @OA\Property(property="id", type="integer", example=1),
+
+* @OA\Property(property="title", type="string", example="Sample Title"),
+
+* @OA\Property(property="body", type="string", example="Lorem ipsum..."),
+
+* @OA\Property(
+
+* property="status",
+
+* type="string",
+
+* enum=App\Enums\Post\PostStatusEnum::class,
+
+* example="draft",
+
+* description="Status of the post"
+
+* ),
+
+* @OA\Property(
+
+* property="language",
+
+* type="string",
+
+* enum=App\Enums\LocaleEnum::class,
+
+* example="en_GB",
+
+* description="Language of the post"
+
+* ),
+
+* @OA\Property(property="user_id", type="integer", example=1),
+
+* @OA\Property(property="created_at", type="string", format="date-time"),
+
+* @OA\Property(property="updated_at", type="string", format="date-time"),
+
+* )
+
+*/
+```
