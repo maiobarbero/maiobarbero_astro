@@ -1,0 +1,167 @@
+---
+title: Docker-compose cheat sheet
+subtitle: All the istructions that you need to start a Docker container
+date: 2024-01-17
+tags:
+  - Docker
+  - DevOps
+description: A cheat sheet with all the instruction to use inside you docker-compose yaml file.
+imagePath: ../../../public/astro-cover.png
+keywords: docker, devops, docker-compose
+seoTitle:
+---
+
+A cheat sheet to create you docker-compose.yml version: '3.8'
+
+## Build the image
+
+```yaml
+web:
+  # build from Dockerfile
+  build: .
+  # alternative to use a folder with more than one Dockerfile:
+  build:
+    context: ./dir # path to Dockerfile
+    dockerfile: Dockerfile.dev #name of the file
+    target: dev # specify the target in a multi-stage build
+  # build from image
+  image: ubuntu
+  image: ubuntu:14.04
+```
+## Init
+Run the service as PID 1. Set this option to true to enable this feature for the service.
+```yaml
+services:
+  web:
+    image: alpine:latest
+    init: true
+```
+
+## Expose port
+
+```yaml
+ports:
+  - "3000"
+  - "8000:80"  # guest:host
+# expose ports to linked services (not to host)
+expose: ["3000"]
+```
+
+### Commands and Entrypoint
+
+```yaml
+# command to execute
+command: bundle exec thin -p 3000
+command: [bundle, exec, thin, -p, 3000]
+
+# override the entrypoint
+entrypoint: /app/start.sh
+entrypoint: [php, -d, vendor/bin/phpunit]
+```
+
+### Environment variables
+
+```yaml
+# environment vars
+environment:
+  RACK_ENV: development
+environment:
+  - RACK_ENV=development
+
+# environment vars from file
+env_file: .env
+env_file: [.env, .development.env]
+```
+
+## Health check
+
+```yaml
+# declare service healthy when `test` command succeed
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost"]
+  interval: 1m30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s
+```
+
+### Dependencies
+
+```yaml
+# make sure `db` is alive before starting
+depends_on:
+  - db
+
+
+# make sure `db` is healty before starting
+# and db-init completed without failure
+depends_on:
+db:
+  condition: service_healthy
+db-init:
+  condition: service_completed_successfully
+
+```
+
+## Volumes
+
+```yaml
+volumes:
+  - /var/lib/mysql # anonimous volume
+  - ./host_path:/docker_container_path # bind mount
+```
+```yaml
+volumes:
+  - type: bind
+    source: ./host_path
+    target: /docker_container_path
+  - type: volume
+    # no source. Override the previous volumes for a specific path 
+    target: /node_modules
+```
+
+## Restart
+
+```yaml
+# automatically restart container
+restart: unless-stopped
+# always, on-failure, no (default)
+```
+
+## User
+
+```yaml
+# specifying user
+user: root
+```
+
+```yaml
+# specifying both user and group with ids
+user: 0:0
+```
+## Commands
+``` shell
+# Starts existing containers.
+docker-compose start
+
+# Stops running containers.
+docker-compose stop
+
+# Pauses running containers.
+docker-compose pause
+
+# Unpauses paused.
+docker-compose unpause
+
+# Lists containers.
+docker-compose ps
+
+# Builds, (re)creates, starts, and attaches to containers for a service.
+docker-compose up
+
+# Stops and removes containers.
+docker-compose down
+```
+
+
+Based on https://devhints.io/docker-compose
