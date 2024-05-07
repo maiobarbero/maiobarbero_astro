@@ -9,6 +9,7 @@ tags:
 description: Monitoring system performance and logs with Grafana is indeed straightforward, especially when working with Docker environments.
 imagePath: ../../../public/grafana.jpg
 keywords: docker, devops, aws, grafana, prometheus, loki
+seoTitle: Deploy a Grafana dashboard with Docker on AWS EC2
 ---
 
 Monitoring system performance and logs with Grafana is indeed straightforward, especially when working with Docker environments. Grafana seamlessly integrates with Docker, providing prebuilt dashboards that instantly visualize key metrics and logs from your containers and hosts.
