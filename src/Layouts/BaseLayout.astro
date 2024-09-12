@@ -6,6 +6,7 @@ import DarkModeToggle from '@components/atoms/DarkModeToggle.astro'
 import Seo from '@components/Seo.astro'
 import Footer from '@components/Footer.astro'
 import Favicon from '@components/Favicon.astro'
+import PostHog from '@components/PostHog.astro'
 
 const {
 	title,
@@ -43,13 +44,14 @@ const {
 		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 		<Favicon/>
 		<Seo
-			title={title}
-			description={description}
-			keywords={keywords}
-			author={author}
-			canonical={canonical}
-			type={type}
+		title={title}
+		description={description}
+		keywords={keywords}
+		author={author}
+		canonical={canonical}
+		type={type}
 		/>
+		<PostHog />
 	</head>
 	<body
 		class='antialiased text-slate-800 dark:text-slate-100 bg-gray-200 dark:bg-slate-900 min-h-screen transition-colors mx-4 md:mx-8 lg:mx-12 scroll-smooth max-w-screen'
