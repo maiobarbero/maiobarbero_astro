@@ -40,7 +40,6 @@ const {
 	x-bind:data-theme='darkMode'
 >
 	<head>
-		<PostHog />
 		<meta charset='UTF-8' />
 		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 		<Favicon/>
@@ -52,6 +51,7 @@ const {
 		canonical={canonical}
 		type={type}
 		/>
+		<PostHog />
 	</head>
 	<body
 		class='antialiased text-slate-800 dark:text-slate-100 bg-gray-200 dark:bg-slate-900 min-h-screen transition-colors mx-4 md:mx-8 lg:mx-12 scroll-smooth max-w-screen'
