@@ -1,5 +1,5 @@
 ---
-import { Picture } from '@astrojs/image/components'
+import { Picture } from 'astro:assets';
 interface Props {
 	delay?: number
 	title: string
@@ -8,7 +8,16 @@ interface Props {
 	date: string
 	link: string
 }
-const { delay = 0, title, description, date, link, imagePath } = Astro.props
+const { delay = 0, title, description, date, link, imagePath } = Astro.props;
+let imageSource;
+if (imagePath) {
+  try {
+    imageSource = await import(imagePath);
+  } catch (e) {
+    // Fallback to default image if import fails
+    imageSource = await import('../../public/Developer activity-amico.svg');
+  }
+}
 ---
 
 <div class='flex w-full' data-aos='zoom-in-up' data-aos-delay={delay}>
@@ -19,7 +28,7 @@ const { delay = 0, title, description, date, link, imagePath } = Astro.props
 		<div class='rounded-xl mb-2'>
 			<Picture
 				alt={title}
-				src={imagePath}
+				src={imageSource.default}
 				formats={['avif', 'webp', 'jpeg']}
 				sizes='(max-width: 800px) 100vw, 800px'
 				widths={[300, 600, 900]}

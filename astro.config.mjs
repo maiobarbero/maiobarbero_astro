@@ -3,35 +3,30 @@ import tailwind from '@astrojs/tailwind'
 import alpinejs from '@astrojs/alpinejs'
 import mdx from '@astrojs/mdx'
 import remarkPlugin1 from 'remark-toc'
-import rehypeMinifyHtml from 'rehype'
+// import rehypeMinify from 'rehype-minify-html'
 import sitemap from '@astrojs/sitemap'
-
-import image from '@astrojs/image'
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://www.maiobarbero.dev',
-	base: '/',
-	integrations: [
-		tailwind(),
-		alpinejs(),
-		mdx({
-			syntaxHighlight: 'shiki',
-			shikiConfig: {
-				theme: 'dracula',
-				wrap: true,
-			},
-			remarkPlugins: [remarkPlugin1],
-			rehypePlugins: [rehypeMinifyHtml],
-			// optimize: {
-			// 	// Prevent the optimizer from handling `h1` elements
-			// 	// These will be treated as custom components
-			// 	customComponentNames: ['h2'],
-			// },
-		}),
-		sitemap(),
-		image({
-			serviceEntryPoint: '@astrojs/image/sharp',
-		}),
-	],
+  site: 'https://www.maiobarbero.dev',
+  base: '/',
+  integrations: [
+    tailwind(),
+    alpinejs(),
+    mdx({
+      syntaxHighlight: 'shiki',
+      shikiConfig: {
+        theme: 'dracula',
+        wrap: true,
+      },
+      remarkPlugins: [remarkPlugin1],
+      // rehypePlugins: [rehypeMinify],
+    }),
+    sitemap(),
+  ],
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp'
+    }
+  }
 })

@@ -7,7 +7,7 @@ tags:
   - DevOps
   - AWS
 description: Monitoring system performance and logs with Grafana is indeed straightforward, especially when working with Docker environments.
-imagePath: ../../../public/grafana.jpg
+imagePath: /public/grafana.jpg
 keywords: docker, devops, aws, grafana, prometheus, loki
 seoTitle: Deploy a Grafana dashboard with Docker on AWS EC2
 ---
@@ -28,11 +28,11 @@ For this project, you will also need to open some ports:
 - **9090** for Prometheus
 - **3100** for Loki
 - **9100** for node-exporter
-  
+
 Navigate to the EC2 Dashboard and locate your EC2 instance. Click on the security group associated with the instance, then click “Edit”. To open ports for inbound traffic, configure an inbound rule by selecting “Custom TCP Rule” as the type. Enter the desired port number and set the source to “Anywhere”. Repeat this step for each port you need to open, creating a separate inbound rule for each port.
 
 ## Install Docker
-With your Linux instance up and running, it’s time to unlock the power of containerization by installing Docker. 
+With your Linux instance up and running, it’s time to unlock the power of containerization by installing Docker.
 This game-changing platform will enable you to effortlessly deploy and manage your applications, including the highly coveted Grafana dashboard.
 
 Connect via ssh with
@@ -55,7 +55,7 @@ To obtain the source code on your EC2 instance, you have two options:
 
 Download the source code repository locally, then use the scp command to securely copy the files to your EC2 instance.
 Directly clone the repository onto your EC2 instance using git. Before proceeding with this option, verify if git is installed on the instance by running `git --version`.
-If git is not installed, you can install it using your Linux distribution's package manager. 
+If git is not installed, you can install it using your Linux distribution's package manager.
 For example, on Amazon Linux 2, you can run: `sudo yum install git`
 
 Once git is available, you can clone the repository with the following command:

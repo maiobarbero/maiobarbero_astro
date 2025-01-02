@@ -1,5 +1,5 @@
 ---
-title: Custom Gutenberg block 
+title: Custom Gutenberg block
 subtitle: client side vs server side creation
 date: 2023-07-28
 tags:
@@ -7,7 +7,7 @@ tags:
   - WordPress
   - PHP
 description: Which are the differences between a custom these two rendering method inside the WordPress Gutenberg editor?
-imagePath: ../../../public/gutenberg.jpg
+imagePath: /public/gutenberg.jpg
 keywords:
 seoTitle:
 ---
@@ -73,11 +73,11 @@ registerBlockType('plugin-name/title-paragraph', {
 This simple block can be easily coded inside the `save` function.
 
 ```js
-save: ({ attributes }) => { 
-	const { title, content } = attributes; 
-	return ( 
-		<div> <h2>{title}</h2> <RichText.Content value={content} /> </div> 
-	); 
+save: ({ attributes }) => {
+	const { title, content } = attributes;
+	return (
+		<div> <h2>{title}</h2> <RichText.Content value={content} /> </div>
+	);
 },
 
 ```
@@ -123,4 +123,3 @@ Happy coding!
 
 
 *Pic by <a href="https://unsplash.com/it/@tozakfikret?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Fikret tozak</a> on <a href="https://unsplash.com/it/foto/rfNLa1HL7eY?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>*
-  
