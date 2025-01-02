@@ -9,15 +9,12 @@ interface Props {
 	link: string
 }
 const { delay = 0, title, description, date, link, imagePath } = Astro.props;
-let imageSource;
-if (imagePath) {
-	try {
-		imageSource = await import(`../assets/${imagePath}`);
-	} catch (e) {
-		// Fallback to default image if import fails
-		imageSource = await import('../assets/Developer activity-amico.svg');
-	}
-}
+
+// Use dynamic imports for images
+const images = import.meta.glob('/src/assets/images/*.{jpeg,jpg,png,gif,webp,avif,svg}', {
+  eager: true
+})
+const imageSource = images[`/src/assets/images/${imagePath}`]?.default
 ---
 
 <div class='flex w-full' data-aos='zoom-in-up' data-aos-delay={delay}>
@@ -26,17 +23,19 @@ if (imagePath) {
 		class='rounded-xl shadow-xl mb-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all w-ful flex flex-col justify-between w-full'
 	>
 		<div class='rounded-xl mb-2'>
-			<Picture
-				alt={title}
-				src={imageSource.default}
-				formats={['avif', 'webp', 'jpeg']}
-				sizes='(max-width: 800px) 100vw, 800px'
-				widths={[300, 600, 900]}
-				aspectRatio='4:3'
-				position='center'
-				fit='cover'
-				class='rounded-xl object-cover object-center h-48 overflow-hidden w-full'
-			/>
+			{imageSource && (
+        <Picture
+          alt={title}
+		  		src={imageSource}
+          formats={['avif', 'webp', 'jpeg']}
+          sizes='(max-width: 800px) 100vw, 800px'
+          widths={[300, 600, 900]}
+          aspectRatio='4:3'
+          position='center'
+          fit='cover'
+          class='rounded-xl object-cover object-center h-48 overflow-hidden w-full'
+        />
+      )}
 		</div>
 		<div class='pb-8 px-6'>
 			<h3 class='mb-2 text-2xl font-bold text-ellipsis'>
