@@ -11,12 +11,12 @@ interface Props {
 const { delay = 0, title, description, date, link, imagePath } = Astro.props;
 let imageSource;
 if (imagePath) {
-  try {
-    imageSource = await import(`../../public/${imagePath}`);
-  } catch (e) {
-    // Fallback to default image if import fails
-    imageSource = await import('../../public/Developer activity-amico.svg');
-  }
+	try {
+		imageSource = await import(`../assets/${imagePath}`);
+	} catch (e) {
+		// Fallback to default image if import fails
+		imageSource = await import('../assets/Developer activity-amico.svg');
+	}
 }
 ---
 
