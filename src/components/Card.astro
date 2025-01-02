@@ -12,7 +12,7 @@ const { delay = 0, title, description, date, link, imagePath } = Astro.props;
 let imageSource;
 if (imagePath) {
   try {
-    imageSource = await import(imagePath);
+    imageSource = await import(`../../public/${imagePath}`);
   } catch (e) {
     // Fallback to default image if import fails
     imageSource = await import('../../public/Developer activity-amico.svg');
