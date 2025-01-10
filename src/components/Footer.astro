@@ -1,6 +1,8 @@
 ---
 import SpanText from './atoms/SpanText.astro'
 import cv from '../../public/Matteo_Barbero_-_Web_Developer.pdf'
+
+const currentYear = new Date().getFullYear()
 ---
 
 <footer class='lg:text-left py-6'>
@@ -200,7 +202,7 @@ import cv from '../../public/Matteo_Barbero_-_Web_Developer.pdf'
 	<div
 		class='flex items-center justify-between mb-0 pb-0 font-extralight text-sm flex-col md:flex-row gap-4'
 	>
-		<div>© 2023 Copyright: Matteo Barbero</div>
+		<div>© {currentYear} Copyright: Matteo Barbero</div>
 		<a href='https://storyset.com/online'>Online illustrations by Storyset</a>
 		Made with ❤️ with Astro
 	</div>
