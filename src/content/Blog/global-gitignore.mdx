@@ -1,0 +1,77 @@
+---
+title: "How to Set Up a Global .gitignore with Git Config"
+subtitle: "Keep your repositories clean by ignoring common files globally"
+date: 2025-05-06
+tags:
+  - git
+  - dotfiles
+  - version control
+  - productivity
+description: "Learn how to configure a global .gitignore file using Git's core.excludesfile setting to avoid repeating ignore rules in every repository."
+imagePath:
+keywords: "git, global gitignore, git config, core.excludesfile, developer setup"
+seoTitle: "Set Up a Global .gitignore with Git Config"
+---
+
+If you work with multiple Git repositories, you’ve likely run into the frustration of ignoring the same files (like `.DS_Store`, `Thumbs.db`, or your IDE settings) over and over again. Fortunately, Git allows you to define a global `.gitignore` file that applies to all repositories on your system. This is done through the `core.excludesfile` configuration option.
+
+In this article, I'll walk you through how to set up a global `.gitignore` file using `git config`.
+
+
+## 🎯 Why Use a Global .gitignore?
+
+Some files are specific to your system or development environment and should never be committed to *any* project. Examples include:
+
+- macOS system files (`.DS_Store`)
+- Windows thumbnails (`Thumbs.db`)
+- IDE configs (`.idea/`, `.vscode/`)
+- Log files (`*.log`)
+- Local environment files (`.env`)
+
+Instead of duplicating the same ignore rules in every repo, a global `.gitignore` keeps things DRY (Don't Repeat Yourself).
+
+
+## 🛠 Step-by-Step Setup
+
+### 1. Create the Global .gitignore File
+
+Start by creating a `.gitignore_global` file in your home directory (or anywhere you prefer):
+
+```bash
+touch ~/.gitignore_global
+```
+
+Then, edit it and add the rules you want:
+
+```bash
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Env files
+.env
+```
+
+### 2. Configure Git to Use the Global File
+Tell Git to use this file globally:
+
+```bash
+git config --global core.excludesfile ~/.gitignore_global
+```
+
+You can verify it worked with:
+
+```
+git config --global core.excludesfile
+```
+
+This should output the path you just set.
