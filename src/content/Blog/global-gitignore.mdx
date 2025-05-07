@@ -18,7 +18,7 @@ If you work with multiple Git repositories, you’ve likely run into the frustra
 In this article, I'll walk you through how to set up a global `.gitignore` file using `git config`.
 
 
-## 🎯 Why Use a Global .gitignore?
+## Why Use a Global .gitignore?
 
 Some files are specific to your system or development environment and should never be committed to *any* project. Examples include:
 
@@ -31,7 +31,7 @@ Some files are specific to your system or development environment and should nev
 Instead of duplicating the same ignore rules in every repo, a global `.gitignore` keeps things DRY (Don't Repeat Yourself).
 
 
-## 🛠 Step-by-Step Setup
+## Step-by-Step Setup
 
 ### 1. Create the Global .gitignore File
 
@@ -70,7 +70,7 @@ git config --global core.excludesfile ~/.gitignore_global
 
 You can verify it worked with:
 
-```
+```bash
 git config --global core.excludesfile
 ```
 
