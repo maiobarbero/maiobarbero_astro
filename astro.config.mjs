@@ -22,7 +22,9 @@ export default defineConfig({
       remarkPlugins: [remarkPlugin1],
       // rehypePlugins: [rehypeMinify],
     }),
-    sitemap(),
+    sitemap({
+      customPages:["https://maiobarbero.dev/_astro/Matteo_Barbero.pdf"]
+    }),
   ],
   image: {
     service: {
